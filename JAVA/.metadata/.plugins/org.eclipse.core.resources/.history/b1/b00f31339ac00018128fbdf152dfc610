@@ -1,0 +1,117 @@
+//classe qui genere le code en binaire reflechi
+	boolean sequence=false;
+	int nsequence;
+	int compteur=0;
+	int max_ligne;
+	int max;
+	int bit=0;
+	int i=0;
+	int [][] table(int poids){
+		int ligne;
+		max_ligne=(int)Math.pow(2,poids);
+		max=max_ligne;
+		int element[][]=new int[poids] [max];
+		int colonne=0;
+		int debut;
+		while(colonne<poids){
+			debut=(int)Math.pow(2,colonne);
+			nsequence=1;//sequence de 2 puissance n (poids) zeros
+			ligne=0;
+			while(max>0){
+				while((i<nsequence)&&(max>0)){
+					i++;
+					int n=0;
+					while(n<debut){
+						element[colonne][ligne]=bit;
+						ligne++;
+						max--;
+						n++;
+					}
+					if((bit==0)&&(i==nsequence)) {
+						bit=1;
+						i=0;
+					}
+					nsequence=2;//sequence de 2 puissance n+1 (poids) zeros ou de uns
+					if((bit==1)&&(i==nsequence)) {
+						bit=0;
+					}				
+				}			
+				i=0;			
+			}
+			max=max_ligne;
+			ligne=0;
+			colonne++;
+		}
+		return element;
+	}		
+}
+
+import java.util.StringTokenizer;
+
+class table_verite{
+	
+	int n_var;
+	char var_C [];
+	public boolean var_L [];
+	
+	table_verite(int n){
+		n_var=n;
+		var_C=new  char[n];
+		for(int i=0;i<n;i++){		
+			var_C[i]=(char)(97+i);
+		}
+		var_L=new boolean[n];
+		for(int index=0;index<n;index++) var_L[index]=false;
+	}
+		
+	
+	boolean logique(String lexem){
+		int i=lexem.length();
+		int j=0,k;
+		boolean bit=true,negation=false;
+		char car;
+		while(bit&&(j<i)){//des que un element est faux on sort de la boucle
+			if(lexem.charAt(j)=='/'){
+				negation=true;
+			 	j++;
+			}
+			car=lexem.charAt(j);
+			for(k=97;(k<=(int)car);k++);
+			if((var_L[k-98]==false)&&(negation==false)) bit=false;
+			if((var_L[k-98]==true)&&(negation==true)) bit=false;
+			j++;
+			negation=false;
+		}
+		return bit;
+	}
+	
+	public static void main(String Arg[]){
+		String combi="";
+		int msb=Integer.parseInt(Arg[1])-1;//determination du poids le plus fort
+		int colonne=msb+1,ligne=(int)Math.pow(2,msb+1);
+		String mot="";
+		int combinaison[][]=new int[colonne][ligne];
+		binaire_reflechi b=new binaire_reflechi();
+		table_verite essai=new table_verite(Integer.parseInt(Arg[1]));
+		StringTokenizer st= new StringTokenizer(Arg[0],"+");//decoupe de l expression logique
+		combinaison=b.table(Integer.parseInt(Arg[1]));
+		for(int i=0;i<colonne;i++) mot=(char)essai.var_C[i]+" "+mot;				
+		System.out.println(mot);
+		mot="";
+		for(int j=0;j<ligne;j++){
+			for(int i=0;i<colonne;i++){
+				mot=combinaison[i][j]+" "+mot;
+				if (combinaison[i][j]==0) essai.var_L[i]=false; else essai.var_L[i]=true;
+				
+			}
+			boolean resultat=false;
+			while((st.hasMoreTokens())&&(resultat==false)) {
+				combi=st.nextToken();
+				resultat=essai.logique(combi);
+			}
+			System.out.println(mot+" resultat      : "+resultat);
+			mot="";
+			st=new StringTokenizer(Arg[0],"+");
+		}
+		combi="";
+		System.out.println("fin");
