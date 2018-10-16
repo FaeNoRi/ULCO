@@ -56,14 +56,13 @@ public class Weapon {
 	
 	public String toString() {
 		
-		String stype = getClass().getSimpleName();
 		String sname = this.getName();
 		int sminD = this.getMinDamage();
 		int smaxD = this.getMaxDamage();
 		int sstamC = this.getStamCost();
 		int sdura = this.getDurability();
 		
-		String str = String.format("[%-10s] %s (min: %s | max: %s | stam: %s | dur: %s)",stype,sname,sminD,smaxD,sstamC,sdura);
+		String str = String.format("%s (min: %s | max: %s | stam: %s | dur: %s)",sname,sminD,smaxD,sstamC,sdura);
 		return str;
 	}
 	

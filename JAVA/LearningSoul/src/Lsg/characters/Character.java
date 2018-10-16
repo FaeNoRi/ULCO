@@ -11,9 +11,9 @@ public class Character {
 	private int stamina;
 	private int maxStamina;
 	private boolean vie;
+	private Weapon arme;
 	
 	Dice dé = new Dice(101);
-	Sword sword = new Sword();
 	
 	protected static int INSTANCES_C_COUNT = 0;
 	
@@ -24,13 +24,15 @@ public class Character {
 		this.maxLife = 10;
 		this.stamina = 10;
 		this.maxStamina = 10; 
+		this.arme = new Sword();
 	}
+	
+	///////// ACCESSEURS  ////////////////////////////////////
 	
 	protected String getName() {
 		return name;
 	}
 
-	
 	protected void setName(String name) {
 		this.name = name;
 	}
@@ -51,7 +53,7 @@ public class Character {
 		this.maxLife = maxLife;
 	}
 
-	protected int getStamina() {
+	public int getStamina() {
 		return stamina;
 	}
 
@@ -67,10 +69,17 @@ public class Character {
 		this.maxStamina = maxStamina;
 	}
 	
+	protected Weapon getWeapon() {
+		return arme;
+	}
+	
+	protected void setWeapon(Weapon w) {
+		this.arme = w;
+	}
 	///////// METHODES ////////////////////////////////////
 	
 	public boolean isAlive() {
-		if(this.life>0){
+		if(this.getLife() > 0){
 			this.vie = true;
 		}else {
 			this.vie = false;
@@ -79,23 +88,46 @@ public class Character {
 		
 	}
 	
-	public int attackWith(Weapon weapon) {
-		int damages=0;
+	private int attackWith(Weapon weapon) {
+		int Sreduc, damages=0;
 		if(weapon.getDurability()==0 || this.getStamina()== 0) {
 			damages=0;
 		}else {
 			dé.roll();
+			if(dé.getRandom() >= 91 ) {
+				System.out.println("!!! Coup Critique ! Precision de "+dé.getRandom()+" !!!");
+			}
 			if(this.getStamina()>weapon.getStamCost()) {
-				damages = weapon.getMinDamage()+Math.round(weapon.getMaxDamage()-weapon.getMinDamage()*dé.getRandom()/weapon.getMaxDamage()); 
+				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100); 
 				this.setStamina(this.getStamina()-weapon.getStamCost());
+				weapon.use();
+				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Dégats Effectifs : "+damages+" !!!\n");
 			}else {
-				damages = weapon.getMinDamage()+Math.round(weapon.getMaxDamage()-weapon.getMinDamage()*dé.getRandom()/weapon.getMaxDamage()) - Math.round(weapon.getMaxDamage()*(weapon.getStamCost()-this.getStamina())/weapon.getMaxDamage());
+				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100);
+				Sreduc = damages - Math.round((weapon.getMaxDamage()*(weapon.getStamCost()-this.getStamina()))/100);
 				this.setStamina(0);
+				weapon.use();
+				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Dégats Effectifs : "+Sreduc+" !!!\n");
 			}
 		}
 		return damages;
 	}
 	
+	public int attack() {
+		return this.attackWith(arme);
+	}
+	
+	public int getHitWith(int value) {
+		int rest;
+		int vieR = this.getLife()-value;
+		rest = (vieR < 0)  ? 0 : vieR;
+		this.setLife(rest);
+		boolean survie = this.isAlive();
+		if(survie == false) {
+			System.out.println("\n!!! "+this.getName()+" est mort(e) !!!\n");
+		}
+		return rest;
+	}
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {
 		this.isAlive();
@@ -104,6 +136,7 @@ public class Character {
 		String sname = this.getName();
 		int slife = this.getLife();
 		int sstam = this.getStamina();
+
 		String sVie;
 		
 		if(this.vie==true) {
@@ -112,15 +145,12 @@ public class Character {
 			sVie = "DEAD";
 		}
 		
-		String str = String.format("[%-10s] %-40s LIFE : %-10s STAMINA : %-10s (%s)",stype,sname,slife,sstam,sVie);
+		String str = String.format("[%-10s] %-40s LIFE : %-10s STAMINA : %-10s (%s)\n",stype,sname,slife,sstam,sVie);
+
 		return str;
 	}
 	
 	public void printStats() {
 		System.out.println(this.toString());
-	}
-	
-	public void attack() {
-		System.out.println();
 	}
 }
