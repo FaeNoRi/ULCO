@@ -1,5 +1,6 @@
 package Lsg;
 
+import Lsg.armors.*;
 import Lsg.characters.*;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
@@ -15,7 +16,6 @@ public class LearningSoulGame {
 	public static void main (String args[]) {
 		LearningSoulGame game = new LearningSoulGame();
 		game.play_v1();
-
 	}
 	
 	public void refresh() {

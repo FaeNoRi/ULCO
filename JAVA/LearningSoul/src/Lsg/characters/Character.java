@@ -128,6 +128,10 @@ public class Character {
 		}
 		return rest;
 	}
+	
+	public abstract float computeProtection() {
+
+	}
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {
 		this.isAlive();
