@@ -3,7 +3,7 @@ package Lsg.characters;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
 
-public class Character {
+public abstract class Character {
 
 	private String name;
 	private int life;
@@ -101,13 +101,14 @@ public class Character {
 				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100); 
 				this.setStamina(this.getStamina()-weapon.getStamCost());
 				weapon.use();
-				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Dégats Effectifs : "+damages+" !!!\n");
+				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" --> "+damages+" Dégats !!!");
 			}else {
 				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100);
 				Sreduc = damages - Math.round((weapon.getMaxDamage()*(weapon.getStamCost()-this.getStamina()))/100);
 				this.setStamina(0);
 				weapon.use();
-				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Dégats Effectifs : "+Sreduc+" !!!\n");
+				int difdamage= damages-Sreduc;
+				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Fatigue ! Dégats Réduits de "+difdamage+" : "+Sreduc+" Dégats!!!");
 			}
 		}
 		return damages;
@@ -118,20 +119,31 @@ public class Character {
 	}
 	
 	public int getHitWith(int value) {
-		int rest;
-		int vieR = this.getLife()-value;
+		int rest, nvalue, reduc, protec = (int) this.computeProtection();
+		if(protec >= 100) {
+			nvalue = 0; 
+			reduc = value;
+		}else {
+			reduc = Math.round((value*protec)/100);
+			nvalue = value - reduc;
+		}
+		
+		System.out.println("La protection de "+this.getName()+" réduit les dégats de "+reduc+" !!!\n");
+		
+		int vieR = this.getLife()-nvalue;
 		rest = (vieR < 0)  ? 0 : vieR;
 		this.setLife(rest);
+		
 		boolean survie = this.isAlive();
 		if(survie == false) {
 			System.out.println("\n!!! "+this.getName()+" est mort(e) !!!\n");
 		}
+		
 		return rest;
 	}
 	
-	public abstract float computeProtection() {
-
-	}
+	public abstract float computeProtection();
+	
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {
 		this.isAlive();
@@ -140,6 +152,7 @@ public class Character {
 		String sname = this.getName();
 		int slife = this.getLife();
 		int sstam = this.getStamina();
+		float sprotec = this.computeProtection();
 
 		String sVie;
 		
@@ -149,12 +162,12 @@ public class Character {
 			sVie = "DEAD";
 		}
 		
-		String str = String.format("[%-10s] %-40s LIFE : %-10s STAMINA : %-10s (%s)\n",stype,sname,slife,sstam,sVie);
-
+		String str = String.format("[%-10s] %-40s LIFE : %-10s STAMINA : %-10s PROTECTION : %-10s (%s)\n",stype,sname,slife,sstam,sprotec,sVie);
 		return str;
 	}
 	
 	public void printStats() {
+		System.out.println("/////////////////////////////////////////////////////// "+this.getClass().getSimpleName()+" ////////////////////////////////////////////////////////////");
 		System.out.println(this.toString());
 	}
 }

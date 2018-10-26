@@ -19,7 +19,7 @@ public class LearningSoulGame {
 	}
 	
 	public void refresh() {
-		hero.printStats();
+		hero.heroPrintStats();
 		monster.printStats();
 	}
 	
@@ -43,6 +43,15 @@ public class LearningSoulGame {
 	
 	public void init(){
 		hero = new Hero("Maid-chan", new Shotgun());
+		
+		MaidHeadBand maid_Head_Band = new MaidHeadBand(); 
+		MaidOutfit maid_Outfit = new MaidOutfit(); 
+		MaidStockings maid_Stockings = new MaidStockings();
+		
+//		hero.setArmorItem(maid_Head_Band, 1);
+//		hero.setArmorItem(maid_Outfit, 2);
+//		hero.setArmorItem(maid_Stockings, 3);
+		
 		monster = new Monster("Tentacule",new SlapTentacle());
 	}
 	

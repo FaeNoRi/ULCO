@@ -31,8 +31,12 @@ public class Hero extends Character{
 		public float getTotalArmor(){
 			Float armorT = (float) 0;
 			for(ArmorItem armorI : armortab) {
-				armorT = armorT + armorI.getArmorValue();
-			}
+				if(armorI == null) {
+					armorT = armorT + 0;
+				}else {
+					armorT = armorT + armorI.getArmorValue();
+				}
+			}	
 			return armorT;
 		}
 		
@@ -50,27 +54,32 @@ public class Hero extends Character{
 			return armortabR;
 		}
 		
-		public float
+		public float computeProtection() {
+			return getTotalArmor();
+		}
 		
-		public String toString() {
-			String str="", strF="[ARMOR]   ";
+		public String armorToString() {
+			String str1="[ARMOR] Armure de "+this.getName()+" ||| ", str2="" , str3="\n" , strF="";
 			int i = 1;
 			
 			for(ArmorItem armorI : armortab) {
 				if(armortab[i-1] == null) {
-					str = i+": Empty   ";
+					str2 = "Slot "+i+": Empty   ";
 				}else {
-					str = i+": "+armortab[i-1].toString()+"   ";
+					str2 = "Slot "+i+": "+armortab[i-1].toString()+"   ";
 				}
-				strF = strF.concat(str);
+				str1 = str1.concat(str2);
 				i++;
 			}
-			
+			strF = str1.concat(str3);
 			return strF;
 		}
 		
-		public void printStats() {
+		public void heroPrintStats() {
+			System.out.println("/////////iii)///////////////////////////////////////////////// "+this.getClass().getSimpleName()+" ////////////////////////////////////////////////////////////");
 			System.out.println(this.toString());
-		}
+			System.out.println(this.armorToString());
+		} 
+
 }
 

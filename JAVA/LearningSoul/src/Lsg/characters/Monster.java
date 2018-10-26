@@ -27,4 +27,8 @@ public class Monster extends Character{
 		protected void setSkinThickness(float skinThickness) {
 			this.skinThickness = skinThickness;
 		}
+		
+		public float computeProtection() {
+			return getSkinThickness();
+		}
 }
