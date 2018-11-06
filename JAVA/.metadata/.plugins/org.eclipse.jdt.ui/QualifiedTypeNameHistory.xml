@@ -6,4 +6,8 @@
 <fullyQualifiedTypeName name="java.lang.String"/>
 <fullyQualifiedTypeName name="Lsg.armors.MaidOutfit"/>
 <fullyQualifiedTypeName name="Lsg.armors.ArmorItem"/>
+<fullyQualifiedTypeName name="Lsg.armors.BlackWitchVeil"/>
+<fullyQualifiedTypeName name="Lsg.armors.RingedKnightArmor"/>
+<fullyQualifiedTypeName name="Lsg.armors.DragonSlayerLeggings"/>
+<fullyQualifiedTypeName name="Lsg.buffs.rings.DragonSlayerRing"/>
 </qualifiedTypeNameHistroy>

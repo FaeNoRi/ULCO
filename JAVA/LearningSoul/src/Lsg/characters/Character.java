@@ -2,6 +2,8 @@ package Lsg.characters;
 
 import Lsg.helpers.*;
 import Lsg.weapons.*;
+import Lsg.buffs.rings.*;
+import Lsg.buffs.talismans.*;
 
 public abstract class Character {
 
@@ -37,7 +39,7 @@ public abstract class Character {
 		this.name = name;
 	}
 
-	protected int getLife() {
+	public int getLife() {
 		return life;
 	}
 
@@ -45,7 +47,7 @@ public abstract class Character {
 		this.life = life;
 	}
 
-	protected int getMaxLife() {
+	public int getMaxLife() {
 		return maxLife;
 	}
 
@@ -69,11 +71,11 @@ public abstract class Character {
 		this.maxStamina = maxStamina;
 	}
 	
-	protected Weapon getWeapon() {
+	public Weapon getWeapon() {
 		return arme;
 	}
 	
-	protected void setWeapon(Weapon w) {
+	public void setWeapon(Weapon w) {
 		this.arme = w;
 	}
 	///////// METHODES ////////////////////////////////////
@@ -143,16 +145,19 @@ public abstract class Character {
 	}
 	
 	public abstract float computeProtection();
+
+	public abstract float computeBuffValue();
 	
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {
 		this.isAlive();
 		
-		String stype = getClass().getSimpleName();
+		String stype = "[ "+getClass().getSimpleName()+" ]";
 		String sname = this.getName();
 		int slife = this.getLife();
 		int sstam = this.getStamina();
 		float sprotec = this.computeProtection();
+		float sbuffs = this.computeBuffValue();
 
 		String sVie;
 		
@@ -162,10 +167,10 @@ public abstract class Character {
 			sVie = "DEAD";
 		}
 		
-		String str = String.format("[%-10s] %-40s LIFE : %-10s STAMINA : %-10s PROTECTION : %-10s (%s)\n",stype,sname,slife,sstam,sprotec,sVie);
+		String str = String.format("%-10s %-20s LIFE : %-10s STAMINA : %-10s PROTECTION : %-10s BUFFS : %-10s (%s)\n",stype,sname,slife,sstam,sprotec,sbuffs,sVie);
 		return str;
 	}
-	
+
 	public void printStats() {
 		System.out.println("/////////////////////////////////////////////////////// "+this.getClass().getSimpleName()+" ////////////////////////////////////////////////////////////");
 		System.out.println(this.toString());

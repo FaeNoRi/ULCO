@@ -4,6 +4,8 @@ import Lsg.armors.*;
 import Lsg.characters.*;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
+import Lsg.buffs.rings.*;
+import Lsg.buffs.talismans.*;
 import java.util.*;
 
 public class LearningSoulGame {
@@ -15,7 +17,7 @@ public class LearningSoulGame {
 	
 	public static void main (String args[]) {
 		LearningSoulGame game = new LearningSoulGame();
-		game.play_v1();
+		game.play_v2();
 	}
 	
 	public void refresh() {
@@ -42,23 +44,30 @@ public class LearningSoulGame {
 	}
 	
 	public void init(){
-		hero = new Hero("Maid-chan", new Shotgun());
-		
-		MaidHeadBand maid_Head_Band = new MaidHeadBand(); 
-		MaidOutfit maid_Outfit = new MaidOutfit(); 
-		MaidStockings maid_Stockings = new MaidStockings();
-		
-//		hero.setArmorItem(maid_Head_Band, 1);
-//		hero.setArmorItem(maid_Outfit, 2);
-//		hero.setArmorItem(maid_Stockings, 3);
-		
-		monster = new Monster("Tentacule",new SlapTentacle());
+		hero = new Hero("Maid-chan", new Sword());
+	
+		//monster = new Monster("Tentacule",new SlapTentacle(),20);
+		monster = new Lycanthrope();
 	}
 	
-	public void play_v1() {
+	public void play_v2() {
 		
 		this.init();
+		
+		hero.setArmorItem(new BlackWitchVeil(), 1);
+		hero.setArmorItem(new RingedKnightArmor(), 2);
+		hero.setArmorItem(new DragonSlayerLeggings(), 3);
+		
+		Ring ring = new DragonSlayerRing();
+		
+		hero.setRing(new RingOfDeath() , 1);
+		hero.setRing(ring , 2);
+		ring.setHero(hero);
+		
+		
 		this.fight1v1();
+		
+		
 		
 	}
 }
