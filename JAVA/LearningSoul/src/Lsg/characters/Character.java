@@ -102,15 +102,17 @@ public abstract class Character {
 			if(this.getStamina()>weapon.getStamCost()) {
 				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100); 
 				this.setStamina(this.getStamina()-weapon.getStamCost());
+				damages = damages + Math.round(damages*(int) this.computeBuffValue()/100);
 				weapon.use();
-				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" --> "+damages+" Dégats !!!");
+				System.out.println(this.getName()+" attaque avec "+ weapon.getName()+" --> "+damages+" Dégats !!!");
 			}else {
 				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100);
+				damages = damages + Math.round(damages*(int) this.computeBuffValue()/100);
 				Sreduc = damages - Math.round((weapon.getMaxDamage()*(weapon.getStamCost()-this.getStamina()))/100);
 				this.setStamina(0);
 				weapon.use();
 				int difdamage= damages-Sreduc;
-				System.out.println("\n!!! "+this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Fatigue ! Dégats Réduits de "+difdamage+" : "+Sreduc+" Dégats!!!");
+				System.out.println(this.getName()+" attaque avec "+ weapon.getName()+" ("+damages+") --> Fatigue ! Dégats Réduits de "+difdamage+" : "+Sreduc+" Dégats!!!");
 			}
 		}
 		return damages;
@@ -130,15 +132,17 @@ public abstract class Character {
 			nvalue = value - reduc;
 		}
 		
-		System.out.println("La protection de "+this.getName()+" réduit les dégats de "+reduc+" !!!\n");
+		System.out.println("La protection de "+this.getName()+" réduit les dégats de "+reduc+" !!!");
 		
 		int vieR = this.getLife()-nvalue;
 		rest = (vieR < 0)  ? 0 : vieR;
 		this.setLife(rest);
 		
+		System.out.println("Points de vie restants : "+rest+" !!!\n");
+		
 		boolean survie = this.isAlive();
 		if(survie == false) {
-			System.out.println("\n!!! "+this.getName()+" est mort(e) !!!\n");
+			System.out.println("!!! "+this.getName()+" est mort(e) !!!\n");
 		}
 		
 		return rest;

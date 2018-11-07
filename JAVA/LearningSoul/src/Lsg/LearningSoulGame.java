@@ -22,7 +22,7 @@ public class LearningSoulGame {
 	
 	public void refresh() {
 		hero.heroPrintStats();
-		monster.printStats();
+		monster.monsterPrintStats();
 	}
 	
 	public void fight1v1() {
@@ -44,8 +44,8 @@ public class LearningSoulGame {
 	}
 	
 	public void init(){
-		hero = new Hero("Maid-chan", new Sword());
-	
+		hero = new Hero("Maid-chan", new Excalibur());
+		
 		//monster = new Monster("Tentacule",new SlapTentacle(),20);
 		monster = new Lycanthrope();
 	}
@@ -59,15 +59,17 @@ public class LearningSoulGame {
 		hero.setArmorItem(new DragonSlayerLeggings(), 3);
 		
 		Ring ring = new DragonSlayerRing();
+		Ring ring2 = new RingOfDeath();
+		Talisman tali = new MoonStone();
 		
-		hero.setRing(new RingOfDeath() , 1);
-		hero.setRing(ring , 2);
+		hero.setRing(ring , 1);
+		hero.setRing(ring2 , 2);
 		ring.setHero(hero);
+		ring2.setHero(hero);
 		
+		monster.setTalisman(tali, 1);
 		
 		this.fight1v1();
-		
-		
 		
 	}
 }

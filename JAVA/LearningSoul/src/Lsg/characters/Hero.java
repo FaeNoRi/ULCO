@@ -22,7 +22,7 @@ public class Hero extends Character{
 			super();
 			
 			this.setName(N);
-			this.setLife(1);
+			this.setLife(100);
 			this.setMaxLife(100);
 			this.setStamina(50);
 			this.setMaxStamina(50);
@@ -40,8 +40,6 @@ public class Hero extends Character{
 		public void setArmorItem(ArmorItem armor, int value) {
 			if(value > 0 || value < this.MAX_ARMOR_PIECES) {
 				armortab[value-1] = armor;
-			}else {
-				System.out.println("Impossible d'équiper cet objet.\nLe personnage a atteint la limite d'équipement");
 			}
 		}
 		
