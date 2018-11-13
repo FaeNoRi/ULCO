@@ -18,6 +18,10 @@ public abstract class Character {
 	Dice dé = new Dice(101);
 	
 	protected static int INSTANCES_C_COUNT = 0;
+	public String LIFE_STATS_STRING = "Life";
+	public String STAM_STATS_STRING = "Stamina";
+	public String PROTEC_STATS_STRING = "Protection";
+	public String BUFF_STATS_STRING = "Buffs";
 	
 	public Character() {
 		INSTANCES_C_COUNT++;
@@ -171,7 +175,7 @@ public abstract class Character {
 			sVie = "DEAD";
 		}
 		
-		String str = String.format("%-10s %-20s LIFE : %-10s STAMINA : %-10s PROTECTION : %-10s BUFFS : %-10s (%s)\n",stype,sname,slife,sstam,sprotec,sbuffs,sVie);
+		String str = String.format("%-10s %-20s "+LIFE_STATS_STRING+" : %-10s "+STAM_STATS_STRING+" : %-10s "+PROTEC_STATS_STRING+" : %-10s "+BUFF_STATS_STRING+" : %-10s (%s)\n",stype,sname,slife,sstam,sprotec,sbuffs,sVie);
 		return str;
 	}
 

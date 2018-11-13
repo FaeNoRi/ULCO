@@ -4,6 +4,7 @@ import Lsg.armors.*;
 import Lsg.characters.*;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
+import Lsg.consumables.*;
 import Lsg.buffs.rings.*;
 import Lsg.buffs.talismans.*;
 import java.util.*;
@@ -12,6 +13,7 @@ public class LearningSoulGame {
 
 	Hero hero;
 	Monster monster;
+	Consumable coffee;
 	
 	Scanner sc = new Scanner(System.in);
 	
@@ -22,7 +24,13 @@ public class LearningSoulGame {
 	
 	public void refresh() {
 		hero.heroPrintStats();
+		Weapon weaponH = hero.getWeapon();
+		weaponH.weaponprintStats();
+		
 		monster.monsterPrintStats();
+		Weapon weaponM = monster.getWeapon();
+		weaponM.weaponprintStats();
+		
 	}
 	
 	public void fight1v1() {

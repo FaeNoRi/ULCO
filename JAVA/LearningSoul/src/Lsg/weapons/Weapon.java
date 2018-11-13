@@ -9,6 +9,11 @@ public class Weapon {
 	protected int durability;
 	protected boolean broke;
 	
+	public String MINDAM_STATS_STRING = "Min Damages";
+	public String MAXDAM_STATS_STRING = "Max Damages";
+	public String STAMCOST_STATS_STRING = "Stamina Cost";
+	public String DURABILITY_STATS_STRING = "Durability";
+	
 	public Weapon(String n, int minD, int maxD, int stamC, int dura) {
 		this.name = n;
 		this.minDamage = minD;
@@ -62,11 +67,11 @@ public class Weapon {
 		int sstamC = this.getStamCost();
 		int sdura = this.getDurability();
 		
-		String str = String.format("%s (min: %s | max: %s | stam: %s | dur: %s)",sname,sminD,smaxD,sstamC,sdura);
+		String str = String.format("[ Weapon ] %-10s ( "+MINDAM_STATS_STRING+" : %s | "+MAXDAM_STATS_STRING+" : %s | "+STAMCOST_STATS_STRING+" : %s | "+DURABILITY_STATS_STRING+" : %s)\n",sname,sminD,smaxD,sstamC,sdura);
 		return str;
 	}
 	
-	public void printStats() {
+	public void weaponprintStats() {
 		System.out.println(this.toString());
 	}
 }
