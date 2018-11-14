@@ -6,12 +6,6 @@ public class Consumable {
 	private int capacity;
 	private String stat;
 	
-	public Consumable() {
-		this.name = "Consumable";
-		this.capacity = 10;
-		this.stat = "Stamina point(s)";
-	}
-	
 	public Consumable(String n, int cap, String stat) {
 		this.name = n;
 		this.capacity = cap;
@@ -48,7 +42,7 @@ public class Consumable {
 		int scap = this.getCapacity();
 		String sstat = this.getStat();
 		
-		String str = String.format("[ CONSUMABLE ] %s [%s %s]\n",sname,scap,sstat);
+		String str = String.format("%s [%s %s]\n",sname,scap,sstat);
 		return str;
 	}
 	

@@ -76,19 +76,18 @@ public class Monster extends Character{
 		
 
 		public String talismanToString() {
-			String str1="[ Talisman ]   Talisman de "+this.getName()+" ||| ", str2="" , str3="\n" , strF="";
+			String str="[ Talisman ]   Talisman de "+this.getName()+" ||| ", strn="\n" , strF="";
 			int i = 1;
 			
 			for(Talisman talI : talitab) {
-				if(talitab[i-1] == null) {
-					str2 = "Slot "+i+": Empty   ";
+				if(talI == null) {
+					str = str.concat("Slot "+i+": Empty   ");
 				}else {
-					str2 = "Slot "+i+": "+talitab[i-1].toString()+"   ";
+					str = str.concat("Slot "+i+": "+talI.toString()+"   ");
 				}
-				str1 = str1.concat(str2);
 				i++;
 			}
-			strF = str1.concat(str3);
+			strF = str.concat(strn);
 			return strF;
 		}
 		

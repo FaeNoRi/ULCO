@@ -10,4 +10,8 @@
 <fullyQualifiedTypeName name="Lsg.armors.RingedKnightArmor"/>
 <fullyQualifiedTypeName name="Lsg.armors.DragonSlayerLeggings"/>
 <fullyQualifiedTypeName name="Lsg.buffs.rings.DragonSlayerRing"/>
+<fullyQualifiedTypeName name="Lsg.consumables.food.Hamburger"/>
+<fullyQualifiedTypeName name="javax.swing.text.StyledEditorKit.ForegroundAction"/>
+<fullyQualifiedTypeName name="Lsg.consumables.drinks.Drink"/>
+<fullyQualifiedTypeName name="Lsg.consumables.Consumable"/>
 </qualifiedTypeNameHistroy>

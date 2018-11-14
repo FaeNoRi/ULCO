@@ -4,14 +4,14 @@ import Lsg.helpers.*;
 import Lsg.weapons.*;
 import Lsg.buffs.rings.*;
 import Lsg.buffs.talismans.*;
+import Lsg.consumables.*;
+import Lsg.consumables.drinks.*;
+import Lsg.consumables.food.*;
 
 public abstract class Character {
 
 	private String name;
-	private int life;
-	private int maxLife;
-	private int stamina;
-	private int maxStamina;
+	private int life, maxLife, stamina, maxStamina;
 	private boolean vie;
 	private Weapon arme;
 	
@@ -26,10 +26,10 @@ public abstract class Character {
 	public Character() {
 		INSTANCES_C_COUNT++;
 		this.name = "Character_"+INSTANCES_C_COUNT;;
-		this.life = 10;
-		this.maxLife = 10;
-		this.stamina = 10;
-		this.maxStamina = 10; 
+		this.life = 100;
+		this.maxLife = 100;
+		this.stamina = 100;
+		this.maxStamina = 100; 
 		this.arme = new Sword();
 	}
 	
@@ -84,6 +84,7 @@ public abstract class Character {
 	}
 	///////// METHODES ////////////////////////////////////
 	
+	///////////////////////// COMBAT ////////////////////////////////////////////////////////////////
 	public boolean isAlive() {
 		if(this.getLife() > 0){
 			this.vie = true;
@@ -94,7 +95,7 @@ public abstract class Character {
 		
 	}
 	
-	private int attackWith(Weapon weapon) {
+	public int attackWith(Weapon weapon) {
 		int Sreduc, damages=0;
 		if(weapon.getDurability()==0 || this.getStamina()== 0) {
 			damages=0;
@@ -155,6 +156,49 @@ public abstract class Character {
 	public abstract float computeProtection();
 
 	public abstract float computeBuffValue();
+	
+	///////////////////////// OBJET ////////////////////////////////////////////////////////////////
+	
+	private void drink(Drink d) {
+		System.out.println(this.getName()+" boit "+d.toString());
+		int regen = d.use();
+		
+		this.setStamina(this.getStamina()+regen);
+		if(	this.getStamina() > this.getMaxStamina()){
+			this.setStamina(this.getMaxStamina()); 
+		}
+	}
+	
+	private void eat(Food f) {
+		System.out.println(this.getName()+" mange "+f.toString());
+		int regen = f.use();
+
+		this.setLife(this.getLife()+regen);
+		if(	this.getLife() > this.getMaxLife()){
+			this.setLife(this.getMaxLife()); 
+		}
+	}
+	
+	public void use(Consumable consumable) {
+		if(consumable instanceof Drink) {
+			this.drink( (Drink) consumable);
+		}else if(consumable instanceof Food) {
+			this.eat( (Food) consumable);
+		}
+	}
+//	
+//	public static void main (String args[]) {
+//		Hero hero = new Hero();
+//		hero.setStamina(0);
+//		hero.printStats();
+//		
+//		Coffee d = new Coffee();
+//		hero.use(d);
+//		hero.printStats();
+//		
+//	}
+//	
+	
 	
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {

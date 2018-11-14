@@ -74,19 +74,18 @@ public class Hero extends Character{
 		}
 		
 		public String armorToString() {
-			String str1="[ Armor ]  Armure de "+this.getName()+"  ||| ", str2="" , str3="\n" , strF="";
+			String str="[ Armor ]  Armure de "+this.getName()+"  ||| ",  strn="\n" , strF="";
 			int i = 1;
 			
 			for(ArmorItem armorI : armortab) {
-				if(armortab[i-1] == null) {
-					str2 = "Slot "+i+": Empty   ";
+				if(armorI == null) {
+					str = str.concat("Slot "+i+": Empty   ");
 				}else {
-					str2 = "Slot "+i+": "+armortab[i-1].toString()+"   ";
+					str =  str.concat("Slot "+i+": "+armorI.toString()+"   ");
 				}
-				str1 = str1.concat(str2);
 				i++;
 			}
-			strF = str1.concat(str3);
+			strF = str.concat(strn);
 			return strF;
 		}
 		
@@ -116,19 +115,18 @@ public class Hero extends Character{
 		
 
 		public String ringToString() {
-			String str1="[ Ring ]   Anneaux de "+this.getName()+" ||| ", str2="" , str3="\n" , strF="";
+			String str="[ Ring ]   Anneaux de "+this.getName()+" ||| ", strn="\n" , strF="";
 			int i = 1;
 			
 			for(Ring ringI : ringtab) {
-				if(ringtab[i-1] == null) {
-					str2 = "Slot "+i+": Empty   ";
+				if(ringI == null) {
+					str =  str.concat("Slot "+i+": Empty   ");
 				}else {
-					str2 = "Slot "+i+": "+ringtab[i-1].toString()+"   ";
+					str =  str.concat("Slot "+i+": "+ringI.toString()+"   ");
 				}
-				str1 = str1.concat(str2);
 				i++;
 			}
-			strF = str1.concat(str3);
+			strF = str.concat(strn);
 			return strF;
 		}
 		

@@ -19,7 +19,9 @@ public class LearningSoulGame {
 	
 	public static void main (String args[]) {
 		LearningSoulGame game = new LearningSoulGame();
-		game.play_v2();
+		//game.play_v2();
+		game.createExhaustedHero();
+		game.aTable();
 	}
 	
 	public void refresh() {
@@ -80,4 +82,45 @@ public class LearningSoulGame {
 		this.fight1v1();
 		
 	}
+	
+	public void createExhaustedHero() {
+		hero = new Hero();
+		Weapon GA = new Weapon("Grosse Arme",0,0,1000,100);
+		hero.setWeapon(GA);
+		hero.getHitWith(99);
+		hero.attackWith(GA);
+		hero.printStats();
+	}
+	
+	public void aTable() {
+		MenuBestOfV4 menu = new MenuBestOfV4();
+		
+		for(Consumable consI : menu) {
+			
+			hero.use(consI);
+			hero.printStats();
+			System.out.println("Après utilisation : "+consI.toString());
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
