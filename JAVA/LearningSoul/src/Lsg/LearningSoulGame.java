@@ -5,6 +5,9 @@ import Lsg.characters.*;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
 import Lsg.consumables.*;
+import Lsg.consumables.food.*;
+import Lsg.consumables.drinks.*;
+import Lsg.consumables.repair.RepairKit;
 import Lsg.buffs.rings.*;
 import Lsg.buffs.talismans.*;
 import java.util.*;
@@ -15,19 +18,24 @@ public class LearningSoulGame {
 	Monster monster;
 	Consumable coffee;
 	
+	public static String BULLET_POINT = "\u2219";
+	
 	Scanner sc = new Scanner(System.in);
 	
 	public static void main (String args[]) {
 		LearningSoulGame game = new LearningSoulGame();
-		//game.play_v2();
-		game.createExhaustedHero();
-		game.aTable();
+		game.title();
+		game.play_v2();
+//		game.createExhaustedHero();
+//		game.aTable();
 	}
 	
 	public void refresh() {
 		hero.heroPrintStats();
 		Weapon weaponH = hero.getWeapon();
 		weaponH.weaponprintStats();
+		Consumable cons =hero.getConsumable();
+		cons.consumableprintStats();
 		
 		monster.monsterPrintStats();
 		Weapon weaponM = monster.getWeapon();
@@ -40,12 +48,18 @@ public class LearningSoulGame {
 		
 		while(true) {
 			
-			System.out.println("Appuyer sur ENTER pour lancer le prochain tour > ");
-			String read = sc.nextLine();
-		
-			monster.getHitWith(hero.attack());
-			if(monster.isAlive() == false) {break;}
+			System.out.println("Appuyer sur 1 pour attaquer ou sur 2 pour consommer un objet > ");
+			int read = sc.nextInt();
 			
+			/// Tour du hero
+			if(read==1){
+				monster.getHitWith(hero.attack());
+				if(monster.isAlive() == false) {break;}
+			
+			}else if(read==2){
+				hero.consume();	
+			}
+			/// Tour du monster
 			hero.getHitWith(monster.attack());
 			if(hero.isAlive() == false) {break;}
 			
@@ -58,29 +72,37 @@ public class LearningSoulGame {
 		
 		//monster = new Monster("Tentacule",new SlapTentacle(),20);
 		monster = new Lycanthrope();
+		
+		/// Armor
+		hero.setArmorItem(new BlackWitchVeil(), 1);
+		hero.setArmorItem(new RingedKnightArmor(), 2);
+		hero.setArmorItem(new DragonSlayerLeggings(), 3);
+		
+		///Rings&Talisman
+		Ring ring = new DragonSlayerRing();
+		Ring ring2 = new RingOfDeath();
+		Talisman tali = new MoonStone();
+		hero.setRing(ring , 1);
+		hero.setRing(ring2 , 2);
+		ring.setHero(hero);
+		ring2.setHero(hero);
+		monster.setTalisman(tali, 1);
+		
+		/// Consumable
+		hero.setConsumable(new Hamburger());
 	}
 	
 	public void play_v2() {
 		
 		this.init();
-		
-		hero.setArmorItem(new BlackWitchVeil(), 1);
-		hero.setArmorItem(new RingedKnightArmor(), 2);
-		hero.setArmorItem(new DragonSlayerLeggings(), 3);
-		
-		Ring ring = new DragonSlayerRing();
-		Ring ring2 = new RingOfDeath();
-		Talisman tali = new MoonStone();
-		
-		hero.setRing(ring , 1);
-		hero.setRing(ring2 , 2);
-		ring.setHero(hero);
-		ring2.setHero(hero);
-		
-		monster.setTalisman(tali, 1);
-		
 		this.fight1v1();
 		
+	}
+	
+	public void title() {
+		System.out.println("///////////////////////////////////////////////////");
+		System.out.println("///           THE LEARNING SOULS GAME           ///");
+		System.out.println("///////////////////////////////////////////////////\n");
 	}
 	
 	public void createExhaustedHero() {
@@ -100,8 +122,13 @@ public class LearningSoulGame {
 			hero.use(consI);
 			hero.printStats();
 			System.out.println("Après utilisation : "+consI.toString());
+			if(consI instanceof RepairKit) {
+				Weapon arme = hero.getWeapon();
+				arme.weaponprintStats();
+			}
 		}
 	}
+	
 }
 
 

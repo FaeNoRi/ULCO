@@ -7,6 +7,7 @@ import Lsg.buffs.talismans.*;
 import Lsg.consumables.*;
 import Lsg.consumables.drinks.*;
 import Lsg.consumables.food.*;
+import Lsg.consumables.repair.RepairKit;
 
 public abstract class Character {
 
@@ -14,14 +15,15 @@ public abstract class Character {
 	private int life, maxLife, stamina, maxStamina;
 	private boolean vie;
 	private Weapon arme;
-	
+	private Consumable consumable;
+
 	Dice dé = new Dice(101);
 	
 	protected static int INSTANCES_C_COUNT = 0;
-	public String LIFE_STATS_STRING = "Life";
-	public String STAM_STATS_STRING = "Stamina";
-	public String PROTEC_STATS_STRING = "Protection";
-	public String BUFF_STATS_STRING = "Buffs";
+	public static String LIFE_STATS_STRING = "Life";
+	public static String STAM_STATS_STRING = "Stamina";
+	public static String PROTEC_STATS_STRING = "Protection";
+	public static String BUFF_STATS_STRING = "Buffs";
 	
 	public Character() {
 		INSTANCES_C_COUNT++;
@@ -82,6 +84,14 @@ public abstract class Character {
 	public void setWeapon(Weapon w) {
 		this.arme = w;
 	}
+	
+	public Consumable getConsumable() {
+		return consumable;
+	}
+
+	public void setConsumable(Consumable consumable) {
+		this.consumable = consumable;
+	}
 	///////// METHODES ////////////////////////////////////
 	
 	///////////////////////// COMBAT ////////////////////////////////////////////////////////////////
@@ -96,24 +106,26 @@ public abstract class Character {
 	}
 	
 	public int attackWith(Weapon weapon) {
-		int Sreduc, damages=0;
-		if(weapon.getDurability()==0 || this.getStamina()== 0) {
+		int Sreduc, stam = this.getStamina(), wstam = weapon.getStamCost();;
+		int damages=0, minD = weapon.getMinDamage(), maxD = weapon.getMaxDamage(), prec = dé.getRandom();
+		
+		if(weapon.getDurability()==0 || stam == 0) {
 			damages=0;
 		}else {
 			dé.roll();
-			if(dé.getRandom() >= 91 ) {
-				System.out.println("!!! Coup Critique ! Precision de "+dé.getRandom()+" !!!");
+			if(prec >= 91 ) {
+				System.out.println("!!! Coup Critique ! Precision de "+prec+" !!!");
 			}
-			if(this.getStamina()>weapon.getStamCost()) {
-				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100); 
-				this.setStamina(this.getStamina()-weapon.getStamCost());
+			if(stam > wstam) {
+				damages = minD + Math.round((maxD - minD) * prec/100); 
+				this.setStamina(stam - wstam);
 				damages = damages + Math.round(damages*(int) this.computeBuffValue()/100);
 				weapon.use();
 				System.out.println(this.getName()+" attaque avec "+ weapon.getName()+" --> "+damages+" Dégats !!!");
 			}else {
-				damages = weapon.getMinDamage()+Math.round((weapon.getMaxDamage()-weapon.getMinDamage())*dé.getRandom()/100);
+				damages = minD + Math.round((maxD - minD) * prec/100);
 				damages = damages + Math.round(damages*(int) this.computeBuffValue()/100);
-				Sreduc = damages - Math.round((weapon.getMaxDamage()*(weapon.getStamCost()-this.getStamina()))/100);
+				Sreduc = damages - Math.round((maxD*(wstam - stam))/100);
 				this.setStamina(0);
 				weapon.use();
 				int difdamage= damages-Sreduc;
@@ -164,6 +176,7 @@ public abstract class Character {
 		int regen = d.use();
 		
 		this.setStamina(this.getStamina()+regen);
+		System.out.println("Stamina restante : "+this.getStamina()+" !!!\n");
 		if(	this.getStamina() > this.getMaxStamina()){
 			this.setStamina(this.getMaxStamina()); 
 		}
@@ -174,9 +187,17 @@ public abstract class Character {
 		int regen = f.use();
 
 		this.setLife(this.getLife()+regen);
+		System.out.println("Points de vie restants : "+this.getLife()+" !!!\n");
 		if(	this.getLife() > this.getMaxLife()){
 			this.setLife(this.getMaxLife()); 
 		}
+	}
+	
+	private void repairWeaponWith(RepairKit kit) {
+		Weapon arme = this.getWeapon();
+		System.out.println(this.getName()+" répare "+arme+" avec "+kit.toString());
+		System.out.println("Durabilité restante : "+arme.getDurability()+" !!!\n");
+		arme.repairWith(kit);
 	}
 	
 	public void use(Consumable consumable) {
@@ -184,21 +205,15 @@ public abstract class Character {
 			this.drink( (Drink) consumable);
 		}else if(consumable instanceof Food) {
 			this.eat( (Food) consumable);
+		}else if(consumable instanceof RepairKit) {
+			this.repairWeaponWith( (RepairKit) consumable);
 		}
 	}
-//	
-//	public static void main (String args[]) {
-//		Hero hero = new Hero();
-//		hero.setStamina(0);
-//		hero.printStats();
-//		
-//		Coffee d = new Coffee();
-//		hero.use(d);
-//		hero.printStats();
-//		
-//	}
-//	
 	
+	public void consume() {
+		Consumable cons = this.getConsumable();
+		use(cons);
+	}
 	
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {
