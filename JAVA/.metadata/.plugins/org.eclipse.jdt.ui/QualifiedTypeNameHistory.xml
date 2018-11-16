@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="Lsg.helpers.Dice"/>
-<fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Array"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
 <fullyQualifiedTypeName name="Lsg.armors.MaidOutfit"/>
@@ -10,8 +9,12 @@
 <fullyQualifiedTypeName name="Lsg.armors.RingedKnightArmor"/>
 <fullyQualifiedTypeName name="Lsg.armors.DragonSlayerLeggings"/>
 <fullyQualifiedTypeName name="Lsg.buffs.rings.DragonSlayerRing"/>
-<fullyQualifiedTypeName name="Lsg.consumables.food.Hamburger"/>
 <fullyQualifiedTypeName name="javax.swing.text.StyledEditorKit.ForegroundAction"/>
 <fullyQualifiedTypeName name="Lsg.consumables.drinks.Drink"/>
 <fullyQualifiedTypeName name="Lsg.consumables.Consumable"/>
+<fullyQualifiedTypeName name="Lsg.weapons.Weapon"/>
+<fullyQualifiedTypeName name="Lsg.consumables.repair.RepairKit"/>
+<fullyQualifiedTypeName name="Lsg.consumables.food.Hamburger"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="Lsg.bags.Collectible"/>
 </qualifiedTypeNameHistroy>

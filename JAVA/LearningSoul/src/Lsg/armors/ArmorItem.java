@@ -1,6 +1,8 @@
 package Lsg.armors;
 
-public class ArmorItem {
+import Lsg.bags.Collectible;
+
+public class ArmorItem implements Collectible{
 
 	protected String name;
 	protected float armorValue;
@@ -17,6 +19,10 @@ public class ArmorItem {
 	}
 	public float getArmorValue() {
 		return armorValue;
+	}
+	
+	public int getWeight() {
+		return 4;
 	}
 
 	public String toString() {

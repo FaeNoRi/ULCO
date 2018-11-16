@@ -1,8 +1,9 @@
 package Lsg.weapons;
 
+import Lsg.bags.Collectible;
 import Lsg.consumables.repair.RepairKit;
 
-public class Weapon {
+public class Weapon implements Collectible {
 	
 	protected String name;
 	protected int minDamage;
@@ -47,6 +48,10 @@ public class Weapon {
 	public void setDurability(int dura) {
 		this.durability = dura;
 	}
+
+	public int getWeight() {
+		return 2;
+	}
 	
 	public void use() {
 		durability--;
@@ -81,4 +86,5 @@ public class Weapon {
 	public void weaponprintStats() {
 		System.out.println(this.toString());
 	}
+
 }
