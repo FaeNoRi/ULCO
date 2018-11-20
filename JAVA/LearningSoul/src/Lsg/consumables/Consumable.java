@@ -45,8 +45,9 @@ public class Consumable implements Collectible {
 		String sname = this.getName();
 		int scap = this.getCapacity();
 		String sstat = this.getStat();
-		
-		String str = String.format("%s [%s %s]\n",sname,scap,sstat);
+		int sweight = this.getWeight();
+				
+		String str = String.format("%s (%s %s) [%s kg]\n",sname,scap,sstat,sweight);
 		return str;
 	}
 	

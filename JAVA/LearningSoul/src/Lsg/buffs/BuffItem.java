@@ -24,7 +24,7 @@ public abstract class BuffItem implements Collectible{
 	
 	@Override
 	public String toString() {
-		return String.format(Locale.US, "[%s, %.2f]", getName(), computeBuffValue()) ;
+		return String.format(Locale.US, "(%s, %.2f) [%s kg]\n", getName(), computeBuffValue(), getWeight()) ;
 	}
 	
 }

@@ -78,8 +78,9 @@ public class Weapon implements Collectible {
 		int smaxD = this.getMaxDamage();
 		int sstamC = this.getStamCost();
 		int sdura = this.getDurability();
+		int sweight = this.getWeight();
 		
-		String str = String.format("[ Weapon ] %-10s ( "+MINDAM_STATS_STRING+" : %s | "+MAXDAM_STATS_STRING+" : %s | "+STAMCOST_STATS_STRING+" : %s | "+DURABILITY_STAT_STRING+" : %s)\n",sname,sminD,smaxD,sstamC,sdura);
+		String str = String.format("%s ( "+MINDAM_STATS_STRING+" : %s | "+MAXDAM_STATS_STRING+" : %s | "+STAMCOST_STATS_STRING+" : %s | "+DURABILITY_STAT_STRING+" : %s) [%s kg]\n",sname,sminD,smaxD,sstamC,sdura,sweight);
 		return str;
 	}
 	

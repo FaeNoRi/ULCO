@@ -26,7 +26,7 @@ public class ArmorItem implements Collectible{
 	}
 
 	public String toString() {
-		String str = new String(this.getName()+" ("+this.getArmorValue()+")");
+		String str = new String(this.getName()+" ("+this.getArmorValue()+") ["+this.getWeight()+" kg]\n");
 		return str;
 	}
 	
