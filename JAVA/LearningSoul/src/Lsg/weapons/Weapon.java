@@ -71,7 +71,7 @@ public class Weapon implements Collectible {
 		this.setDurability(this.getDurability()+regen);
 	}
 	
-	public String toString() {
+	public String weaponToString() {
 		
 		String sname = this.getName();
 		int sminD = this.getMinDamage();
@@ -85,7 +85,7 @@ public class Weapon implements Collectible {
 	}
 	
 	public void weaponprintStats() {
-		System.out.println(this.toString());
+		System.out.println(this.weaponToString());
 	}
 
 }

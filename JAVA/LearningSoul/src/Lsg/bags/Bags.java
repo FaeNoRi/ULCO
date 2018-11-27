@@ -36,27 +36,26 @@ public class Bags extends HashSet<Consumable> {
 	}
 	
 	public void push(Collectible item) {
-		items.add(item);
-		this.setWeight(this.getWeight() + item.getWeight());
+		int weight = item.getWeight() ;
+        if(this.weight + weight <= capacity){
+            items.add(item) ;
+            this.weight += weight ;
+        }
 	}
 	
 	public Collectible pop(Collectible item) {
-		for(Collectible col : items) {
-			if(col == item) {
-				items.remove(col);
-				return col;
-			}
-		}
-		return null;
+        if(items.contains(item)){
+            int weight = item.getWeight() ;
+            items.remove(item) ;
+            this.weight -= weight ;
+            return item ;
+        }else{
+            return null ;
+        }
 	}
 	
 	public boolean contains(Collectible item) {
-		for(Collectible col : items) {
-			if(col == item) {
-				return true;
-			}
-		}
-		return false;
+		return items.contains(item) ;
 	}
 	
 	public Collectible[] getItems() {
@@ -69,6 +68,16 @@ public class Bags extends HashSet<Consumable> {
 		}
 		return collR;
 	}
+	
+    public static void transfer(Bags from, Bags into){
+        int size = into.getCapacity() ;
+        Collectible[] items = from.getItems() ;
+        for(Collectible item: items){
+            if(item.getWeight() <= (size - into.getWeight())){
+                into.push(from.pop(item));
+            }
+        }
+    }
 	
 	public String toString(){
 		String str=""+this.getClass().getSimpleName()+" ["+items.size()+" items | "+this.getWeight()+"/"+this.getCapacity()+"]\n";
@@ -85,14 +94,26 @@ public class Bags extends HashSet<Consumable> {
 	public void bagPrintStats() {
 		System.out.println(this.toString());
 	}
+
 	
 	public static void main (String args[]) {
-		Bags bag = new SmallBag();
-		
-		bag.push(new Shotgun());
-		bag.push(new DragonSlayerLeggings());
-		bag.push(new RingedKnightArmor());
-		
-		bag.bagPrintStats();
+        System.out.println();
+        Bags bag = new Bags(10) ;
+        bag.push(new RingedKnightArmor());
+        bag.push(new DragonSlayerLeggings());
+        bag.push(new Shotgun());
+        System.out.println("Sac 1 :");
+        System.out.println(bag);
+
+        Bags newBag = new Bags(5) ;
+        System.out.println("Sac 2 :");
+        System.out.println(newBag);
+        transfer(bag, newBag);
+        System.out.println();
+        System.out.println("Sac 2 après transfert :");
+        System.out.println(newBag);
+
+        System.out.println("Sac 1 après transfert :");
+        System.out.println(bag);
 	}
 }

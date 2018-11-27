@@ -2,6 +2,7 @@ package Lsg.characters;
 
 import Lsg.helpers.*;
 import Lsg.weapons.*;
+import Lsg.bags.*;
 import Lsg.buffs.rings.*;
 import Lsg.buffs.talismans.*;
 import Lsg.consumables.*;
@@ -16,6 +17,7 @@ public abstract class Character {
 	private boolean vie;
 	private Weapon arme;
 	private Consumable consumable;
+	protected Bags bag ;
 
 	Dice dé = new Dice(101);
 	
@@ -92,6 +94,7 @@ public abstract class Character {
 	public void setConsumable(Consumable consumable) {
 		this.consumable = consumable;
 	}
+	
 	///////// METHODES ////////////////////////////////////
 	
 	///////////////////////// COMBAT ////////////////////////////////////////////////////////////////
@@ -215,6 +218,91 @@ public abstract class Character {
 		use(cons);
 	}
 	
+	private Consumable fastUseFirst(Class<? extends Consumable> type){
+		if(type == null) return null ;
+		Consumable found = null ;
+		Collectible[] items = getBagItems() ;
+		for(Collectible item: items){
+			if(type.isInstance(item)){
+				found = (Consumable)item ;
+				break;
+			}
+		}
+		if(found != null){
+			use(found) ;
+			if(found.getCapacity() == 0) pullOut(found) ;
+		}
+		return found ;
+	}
+
+	public Drink fastDrink(){
+		System.out.println(name + " drinks FAST :");
+		return (Drink) fastUseFirst(Drink.class) ;
+	}
+
+	public Food fastEat(){
+		System.out.println(name + " eats FAST :");
+		return (Food) fastUseFirst(Food.class) ;
+	}
+
+	public RepairKit fastRepair(){
+		System.out.println(name + " repairs FAST :");
+		return (RepairKit) fastUseFirst(RepairKit.class);
+	}
+	
+	public void printConsummable(){
+		consumable.consumableprintStats();
+	}
+	///////////////////////// BAGS ////////////////////////////////////////////////////////////////
+	
+	public Collectible[] getBagItems(){
+		return bag.getItems() ;
+	}
+	
+	public int getBagCapacity(){
+		return bag.getCapacity() ;
+	}
+	
+	public int getBagWeight(){
+		return bag.getWeight() ;
+	}
+	
+	public void pickUp(Collectible item){
+		System.out.print(name + " picks up " + item);
+		bag.push(item);
+	}
+	
+	public Collectible pullOut(Collectible item){
+		System.out.print(name + " pulls out " + item);
+		return bag.pop(item) ;
+	}
+	
+	public Bags setBag(Bags newBag){
+		System.out.println(name + " changes " + bag.getClass().getSimpleName() + " for " + newBag.getClass().getSimpleName());
+		Bags oldBag = bag ;
+		Bags.transfer(oldBag, newBag);
+		bag = newBag ;
+		return oldBag ;
+	}
+	
+	public void equip(Consumable consumable){
+		if(consumable == null) return ;
+		if(bag.contains(consumable)){
+			pullOut(consumable) ;
+			System.out.println(" and equips it !");
+			setConsumable(consumable);
+		}
+	}
+	
+	public void equip(Weapon weapon){
+		if(weapon == null) return ;
+		if(bag.contains(weapon)){
+			pullOut(weapon) ;
+			System.out.println(" and equips it !");
+			setWeapon(weapon);
+		}
+	}
+	
 	///////// AFFICHAGE ////////////////////////////////////
 	public String toString() {
 		this.isAlive();
@@ -242,4 +330,5 @@ public abstract class Character {
 		System.out.println("/////////////////////////////////////////////////////// "+this.getClass().getSimpleName()+" ////////////////////////////////////////////////////////////");
 		System.out.println(this.toString());
 	}
+	
 }

@@ -5,6 +5,7 @@ import java.util.*;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
 import Lsg.armors.*;
+import Lsg.bags.*;
 import Lsg.buffs.*;
 import Lsg.buffs.rings.*;
 
@@ -18,7 +19,7 @@ public class Hero extends Character{
 		
 ///////////////////////////////////////////////////// INIT //////////////////////////////////////////////////////////
 		
-		public Hero(String N, Weapon w) {
+		public Hero(String N) {
 			super();
 			
 			this.setName(N);
@@ -26,7 +27,6 @@ public class Hero extends Character{
 			this.setMaxLife(100);
 			this.setStamina(50);
 			this.setMaxStamina(50);
-			this.setWeapon(w);
 		}
 		
 		public Hero() {
@@ -88,6 +88,16 @@ public class Hero extends Character{
 			return str;
 		}
 		
+		public void equip(ArmorItem item, int slot){
+			if(item==null) return ;
+
+			if(bag.contains(item)){
+				pullOut(item) ;
+				System.out.println(" and equips it !");
+				setArmorItem(item, slot);
+			}
+		}
+		
 //////////////////////////////////////////////////// RINGS ///////////////////////////////////////////////////////////
 		
 		public void setRing(Ring ring, int value) {
@@ -128,13 +138,28 @@ public class Hero extends Character{
 			return str;
 		}
 		
+		public void equip(Ring item, int slot){
+			if(item==null) return ;
+			if(bag.contains(item)){
+				pullOut(item) ;
+				System.out.println(" and equips it !");
+				setRing(item, slot);
+			}
+		}
+		
 //////////////////////////////////////////////////// AFFICHAGE ////////////////////////////////////////////////////////
 		
 		public void heroPrintStats() {
 			System.out.println("////////////////////////////////////////////////////////// "+this.getClass().getSimpleName()+" ////////////////////////////////////////////////////////////");
 			System.out.println(this.toString());
-			System.out.println(this.armorToString());
-			System.out.println(this.ringToString());
+		}
+		
+		public void printArmor(){
+			System.out.println(armorToString());
+		}
+		
+		public void printRing(){
+			System.out.println(ringToString());
 		}
 
 }

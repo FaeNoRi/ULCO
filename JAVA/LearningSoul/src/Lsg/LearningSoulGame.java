@@ -1,6 +1,7 @@
 package Lsg;
 
 import Lsg.armors.*;
+import Lsg.bags.*;
 import Lsg.characters.*;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
@@ -24,24 +25,29 @@ public class LearningSoulGame {
 	
 	public static void main (String args[]) {
 		LearningSoulGame game = new LearningSoulGame();
-		game.title();
-		game.play_v2();
-//		game.createExhaustedHero();
-//		game.aTable();
+		//game.init();
+		game.testExceptions();
+	}
+	
+	public void testExceptions(){
+		hero.setWeapon(null);
+		fight1v1();
 	}
 	
 	public void refresh() {
 		hero.heroPrintStats();
 		Weapon weaponH = hero.getWeapon();
 		weaponH.weaponprintStats();
-		Consumable cons =hero.getConsumable();
-		cons.consumableprintStats();
+		hero.printArmor();
+		hero.printRing();
+		hero.printConsummable();
 		
 		monster.monsterPrintStats();
 		Weapon weaponM = monster.getWeapon();
 		weaponM.weaponprintStats();
 		
 	}
+	
 	
 	public void fight1v1() {
 		this.refresh();
@@ -90,15 +96,15 @@ public class LearningSoulGame {
 		
 		/// Consumable
 		hero.setConsumable(new Hamburger());
-	}
-	
-	public void play_v2() {
 		
-		this.init();
+		this.title();
 		this.fight1v1();
-		
 	}
 	
+//	public void play_v2() {
+//		
+//	}
+
 	public void title() {
 		System.out.println("///////////////////////////////////////////////////");
 		System.out.println("///           THE LEARNING SOULS GAME           ///");
@@ -112,21 +118,6 @@ public class LearningSoulGame {
 		hero.getHitWith(99);
 		hero.attackWith(GA);
 		hero.printStats();
-	}
-	
-	public void aTable() {
-		MenuBestOfV4 menu = new MenuBestOfV4();
-		
-		for(Consumable consI : menu) {
-			
-			hero.use(consI);
-			hero.printStats();
-			System.out.println("Après utilisation : "+consI.toString());
-			if(consI instanceof RepairKit) {
-				Weapon arme = hero.getWeapon();
-				arme.weaponprintStats();
-			}
-		}
 	}
 	
 }
