@@ -9,13 +9,14 @@ import Lsg.consumables.*;
 import Lsg.consumables.drinks.*;
 import Lsg.consumables.food.*;
 import Lsg.consumables.repair.RepairKit;
+import Lsg.exceptions.*;
 
 public abstract class Character {
 
 	private String name;
 	private int life, maxLife, stamina, maxStamina;
 	private boolean vie;
-	private Weapon arme;
+	private Weapon weapon;
 	private Consumable consumable;
 	protected Bags bag ;
 
@@ -34,12 +35,12 @@ public abstract class Character {
 		this.maxLife = 100;
 		this.stamina = 100;
 		this.maxStamina = 100; 
-		this.arme = new Sword();
+		this.weapon = new Sword();
 	}
 	
 	///////// ACCESSEURS  ////////////////////////////////////
 	
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -80,11 +81,11 @@ public abstract class Character {
 	}
 	
 	public Weapon getWeapon() {
-		return arme;
+		return weapon;
 	}
 	
 	public void setWeapon(Weapon w) {
-		this.arme = w;
+		this.weapon = w;
 	}
 	
 	public Consumable getConsumable() {
@@ -94,10 +95,9 @@ public abstract class Character {
 	public void setConsumable(Consumable consumable) {
 		this.consumable = consumable;
 	}
-	
-	///////// METHODES ////////////////////////////////////
-	
+
 	///////////////////////// COMBAT ////////////////////////////////////////////////////////////////
+	
 	public boolean isAlive() {
 		if(this.getLife() > 0){
 			this.vie = true;
@@ -108,10 +108,15 @@ public abstract class Character {
 		
 	}
 	
-	public int attackWith(Weapon weapon) {
+	protected int attackWith(Weapon weapon) throws WeaponNullException, WeaponBrokenException, StaminaEmptyException {
+		
+		if(weapon == null) throw new WeaponNullException() ;
+		if(weapon.isBroken()) throw new WeaponBrokenException(weapon) ;
+		if(stamina == 0) throw new StaminaEmptyException() ;
+		
 		int Sreduc, stam = this.getStamina(), wstam = weapon.getStamCost();;
 		int damages=0, minD = weapon.getMinDamage(), maxD = weapon.getMaxDamage(), prec = dé.getRandom();
-		
+
 		if(weapon.getDurability()==0 || stam == 0) {
 			damages=0;
 		}else {
@@ -119,6 +124,7 @@ public abstract class Character {
 			if(prec >= 91 ) {
 				System.out.println("!!! Coup Critique ! Precision de "+prec+" !!!");
 			}
+			
 			if(stam > wstam) {
 				damages = minD + Math.round((maxD - minD) * prec/100); 
 				this.setStamina(stam - wstam);
@@ -138,8 +144,8 @@ public abstract class Character {
 		return damages;
 	}
 	
-	public int attack() {
-		return this.attackWith(arme);
+	public int attack() throws WeaponNullException, WeaponBrokenException, StaminaEmptyException {
+		return attackWith(this.getWeapon()) ;
 	}
 	
 	public int getHitWith(int value) {
@@ -174,51 +180,48 @@ public abstract class Character {
 	
 	///////////////////////// OBJET ////////////////////////////////////////////////////////////////
 	
-	private void drink(Drink d) {
-		System.out.println(this.getName()+" boit "+d.toString());
-		int regen = d.use();
-		
-		this.setStamina(this.getStamina()+regen);
-		System.out.println("Stamina restante : "+this.getStamina()+" !!!\n");
-		if(	this.getStamina() > this.getMaxStamina()){
-			this.setStamina(this.getMaxStamina()); 
-		}
+	private void eat(Food food) throws ConsumeNullException, ConsumeEmptyException {
+		if(food == null) throw new ConsumeNullException(food);
+		System.out.println(getName() + " eats " + food);
+		int newLife = getLife() + food.use() ;
+		newLife = (newLife < maxLife) ? newLife : maxLife ;
+		setLife(newLife);
 	}
-	
-	private void eat(Food f) {
-		System.out.println(this.getName()+" mange "+f.toString());
-		int regen = f.use();
 
-		this.setLife(this.getLife()+regen);
-		System.out.println("Points de vie restants : "+this.getLife()+" !!!\n");
-		if(	this.getLife() > this.getMaxLife()){
-			this.setLife(this.getMaxLife()); 
+	private void drink(Drink drink) throws ConsumeNullException, ConsumeEmptyException {
+		if(drink == null) throw new ConsumeNullException(drink);
+		System.out.println(getName() + " drinks " + drink);
+		int newStam = getStamina() + drink.use() ;
+		newStam = (newStam < maxStamina) ? newStam : maxStamina ;
+		setStamina(newStam);
+	}
+
+	private void repairWeaponWith(RepairKit kit) throws WeaponNullException, ConsumeNullException {
+		if(weapon ==null) throw new WeaponNullException() ;
+		System.out.println(getName() + " repairs " + weapon + " with " + kit);
+		weapon.repairWith(kit);
+	}
+
+	public void use(Consumable consumable) throws ConsumeNullException, ConsumeEmptyException, ConsumeRepairNullWeaponException {
+		if(consumable == null) throw new ConsumeNullException(consumable) ;
+		if(consumable instanceof Drink){
+			drink((Drink)consumable);
+		}else if(consumable instanceof Food){
+			eat((Food)consumable) ;
+		}else if(consumable instanceof RepairKit){
+			try {
+				repairWeaponWith((RepairKit)consumable);
+			} catch (WeaponNullException e) {
+				throw new ConsumeRepairNullWeaponException(consumable) ;
+			}
 		}
 	}
 	
-	private void repairWeaponWith(RepairKit kit) {
-		Weapon arme = this.getWeapon();
-		System.out.println(this.getName()+" répare "+arme+" avec "+kit.toString());
-		System.out.println("Durabilité restante : "+arme.getDurability()+" !!!\n");
-		arme.repairWith(kit);
+	public void consume() throws ConsumeNullException, ConsumeEmptyException, ConsumeRepairNullWeaponException {
+		use(consumable);
 	}
 	
-	public void use(Consumable consumable) {
-		if(consumable instanceof Drink) {
-			this.drink( (Drink) consumable);
-		}else if(consumable instanceof Food) {
-			this.eat( (Food) consumable);
-		}else if(consumable instanceof RepairKit) {
-			this.repairWeaponWith( (RepairKit) consumable);
-		}
-	}
-	
-	public void consume() {
-		Consumable cons = this.getConsumable();
-		use(cons);
-	}
-	
-	private Consumable fastUseFirst(Class<? extends Consumable> type){
+	private Consumable fastUseFirst(Class<? extends Consumable> type) throws ConsumeNullException, ConsumeEmptyException, ConsumeRepairNullWeaponException, BagNullException {
 		if(type == null) return null ;
 		Consumable found = null ;
 		Collectible[] items = getBagItems() ;
@@ -228,64 +231,91 @@ public abstract class Character {
 				break;
 			}
 		}
-		if(found != null){
-			use(found) ;
-			if(found.getCapacity() == 0) pullOut(found) ;
-		}
+		use(found) ;
+		if(found.getCapacity() == 0) pullOut(found) ;
 		return found ;
 	}
-
-	public Drink fastDrink(){
+	
+	public Drink fastDrink() throws ConsumeNullException, ConsumeEmptyException, BagNullException {
 		System.out.println(name + " drinks FAST :");
-		return (Drink) fastUseFirst(Drink.class) ;
+		Drink drink = null ;
+		try {
+			drink = (Drink) fastUseFirst(Drink.class) ;
+		} catch (ConsumeRepairNullWeaponException e) {
+			e.printStackTrace();
+		}
+		return drink ;
 	}
 
-	public Food fastEat(){
+	public Food fastEat() throws ConsumeNullException, ConsumeEmptyException, BagNullException {
 		System.out.println(name + " eats FAST :");
-		return (Food) fastUseFirst(Food.class) ;
+		Food food = null ;
+		try {
+			food = (Food) fastUseFirst(Food.class);
+		} catch (ConsumeRepairNullWeaponException e) {
+			e.printStackTrace();
+		}
+		return food ;
 	}
 
-	public RepairKit fastRepair(){
+	public RepairKit fastRepair() throws ConsumeNullException, ConsumeEmptyException, ConsumeRepairNullWeaponException, BagNullException {
 		System.out.println(name + " repairs FAST :");
 		return (RepairKit) fastUseFirst(RepairKit.class);
 	}
+
 	
 	public void printConsummable(){
 		consumable.consumableprintStats();
 	}
+	
 	///////////////////////// BAGS ////////////////////////////////////////////////////////////////
 	
-	public Collectible[] getBagItems(){
+	public Collectible[] getBagItems() throws BagNullException {
+		if(bag == null) throw new BagNullException() ;
 		return bag.getItems() ;
 	}
 	
-	public int getBagCapacity(){
+	public int getBagCapacity() throws BagNullException {
+		if(bag == null) throw new BagNullException() ;
 		return bag.getCapacity() ;
 	}
-	
-	public int getBagWeight(){
+
+	public int getBagWeight() throws BagNullException {
+		if(bag == null) throw new BagNullException() ;
 		return bag.getWeight() ;
 	}
+
 	
-	public void pickUp(Collectible item){
+	public void pickUp(Collectible item) throws BagNullException, BagFullException {
+		if(bag == null) throw new BagNullException() ;
 		System.out.print(name + " picks up " + item);
 		bag.push(item);
 	}
 	
-	public Collectible pullOut(Collectible item){
+	public Collectible pullOut(Collectible item) throws BagNullException {
+		if(bag == null) throw new BagNullException() ;
 		System.out.print(name + " pulls out " + item);
 		return bag.pop(item) ;
 	}
 	
 	public Bags setBag(Bags newBag){
-		System.out.println(name + " changes " + bag.getClass().getSimpleName() + " for " + newBag.getClass().getSimpleName());
+		String oldBagName, newBagName ;
+		String nullBagName = "null" ;
+		try{
+			oldBagName = bag.getClass().getSimpleName() ;
+		}catch (NullPointerException e){ oldBagName = nullBagName ; }
+		try {
+			newBagName = newBag.getClass().getSimpleName();
+		}catch (NullPointerException e){ newBagName = nullBagName ; }
+		System.out.println(name + " changes " + oldBagName + " for " + newBagName);
 		Bags oldBag = bag ;
 		Bags.transfer(oldBag, newBag);
 		bag = newBag ;
 		return oldBag ;
 	}
 	
-	public void equip(Consumable consumable){
+	public void equip(Consumable consumable) throws BagNullException {
+		if(bag == null) throw new BagNullException() ;
 		if(consumable == null) return ;
 		if(bag.contains(consumable)){
 			pullOut(consumable) ;
@@ -294,7 +324,8 @@ public abstract class Character {
 		}
 	}
 	
-	public void equip(Weapon weapon){
+	public void equip(Weapon weapon) throws BagNullException {
+		if(bag == null) throw new BagNullException() ;
 		if(weapon == null) return ;
 		if(bag.contains(weapon)){
 			pullOut(weapon) ;
@@ -304,6 +335,7 @@ public abstract class Character {
 	}
 	
 	///////// AFFICHAGE ////////////////////////////////////
+	
 	public String toString() {
 		this.isAlive();
 		

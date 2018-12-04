@@ -1,8 +1,10 @@
 package Lsg;
 
 import Lsg.armors.*;
+import Lsg.exceptions.*;
 import Lsg.bags.*;
 import Lsg.characters.*;
+import Lsg.characters.Character;
 import Lsg.helpers.*;
 import Lsg.weapons.*;
 import Lsg.consumables.*;
@@ -21,12 +23,13 @@ public class LearningSoulGame {
 	
 	public static String BULLET_POINT = "\u2219";
 	
-	Scanner sc = new Scanner(System.in);
+	Scanner scanner = new Scanner(System.in);
 	
 	public static void main (String args[]) {
 		LearningSoulGame game = new LearningSoulGame();
-		//game.init();
-		game.testExceptions();
+		game.init();
+		//game.testExceptions();
+		game.fight1v1();
 	}
 	
 	public void testExceptions(){
@@ -52,29 +55,66 @@ public class LearningSoulGame {
 	public void fight1v1() {
 		this.refresh();
 		
-		while(true) {
-			
-			System.out.println("Appuyer sur 1 pour attaquer ou sur 2 pour consommer un objet > ");
-			int read = sc.nextInt();
-			
-			/// Tour du hero
-			if(read==1){
-				monster.getHitWith(hero.attack());
-				if(monster.isAlive() == false) {break;}
-			
-			}else if(read==2){
-				hero.consume();	
+		Character agressor = hero ;
+		Character target = monster ;
+		int action ; 
+		int attack, hit ;
+		Character tmp ;
+
+		while(hero.isAlive() && monster.isAlive()){ 
+
+			action = 1 ; 
+			System.out.println();
+
+			if(agressor == hero) {
+				do {
+					System.out.println("Appuyer sur 1 pour attaquer ou sur 2 pour consommer un objet > ");
+					action = scanner.nextInt();
+				}
+				while(action < 1 || action > 2) ;
+				System.out.println();
 			}
-			/// Tour du monster
-			hero.getHitWith(monster.attack());
-			if(hero.isAlive() == false) {break;}
+
+			if(action == 2){
+				try {
+					hero.consume();
+				} catch (ConsumeNullException e) {
+					System.out.println("Action Impossible : aucun consommable n'est équipé !");
+				} catch (ConsumeEmptyException e) {
+					System.out.println("Action Impossible : " + e.getConsumable().getName() + " est vide !");
+				} catch (ConsumeRepairNullWeaponException e) {
+					System.out.println("Action Impossible : aucune arme n'est équipée !");
+				}
+				System.out.println();
+			}else{
+				try {
+					attack = agressor.attack() ;
+				} catch (WeaponNullException e) {
+					System.out.println("Attention :  aucune arme n'est équipée !!!\n");
+					attack = 0 ;
+				} catch (WeaponBrokenException e) {
+					System.out.println("Attention : " + e.getMessage() + "\n");
+					attack = 0 ;
+				} catch (StaminaEmptyException e) {
+					System.out.println("Action Impossible : plus de stamina !!!\n");
+					attack = 0 ;
+				}
+				hit = target.getHitWith(attack);
+			}
+
+			refresh();
 			
-			this.refresh();
+			tmp = agressor ;
+			agressor = target ;
+			target = tmp ;
+			
 		}
+		
+		Character winner = (hero.isAlive()) ? hero : monster ;
 	}
 	
 	public void init(){
-		hero = new Hero("Maid-chan", new Excalibur());
+		hero = new Hero("Maid-chan");
 		
 		//monster = new Monster("Tentacule",new SlapTentacle(),20);
 		monster = new Lycanthrope();
@@ -98,7 +138,7 @@ public class LearningSoulGame {
 		hero.setConsumable(new Hamburger());
 		
 		this.title();
-		this.fight1v1();
+
 	}
 	
 //	public void play_v2() {
@@ -112,14 +152,27 @@ public class LearningSoulGame {
 	}
 	
 	public void createExhaustedHero() {
-		hero = new Hero();
-		Weapon GA = new Weapon("Grosse Arme",0,0,1000,100);
-		hero.setWeapon(GA);
-		hero.getHitWith(99);
-		hero.attackWith(GA);
-		hero.printStats();
+		System.out.println("Create exhausted hero : ");
+		hero = new Hero() ;
+
+		// pour vider la vie
+		hero.getHitWith(99) ;
+
+		// pour depenser la stam
+		hero.setWeapon(new Weapon("Grosse Arme", 0, 0, 1000, 100));
+		try {
+			hero.attack() ;
+		} catch (WeaponNullException e) {
+			e.printStackTrace();
+		} catch (WeaponBrokenException e) {
+			e.printStackTrace();
+		} catch (StaminaEmptyException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(hero);
+
 	}
-	
 }
 
 

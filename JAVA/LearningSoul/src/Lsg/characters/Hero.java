@@ -8,6 +8,7 @@ import Lsg.armors.*;
 import Lsg.bags.*;
 import Lsg.buffs.*;
 import Lsg.buffs.rings.*;
+import Lsg.exceptions.*;
 
 public class Hero extends Character{
 	
@@ -88,9 +89,9 @@ public class Hero extends Character{
 			return str;
 		}
 		
-		public void equip(ArmorItem item, int slot){
+		public void equip(ArmorItem item, int slot) throws BagNullException {
 			if(item==null) return ;
-
+			if(bag == null) throw new BagNullException() ;
 			if(bag.contains(item)){
 				pullOut(item) ;
 				System.out.println(" and equips it !");
@@ -138,8 +139,9 @@ public class Hero extends Character{
 			return str;
 		}
 		
-		public void equip(Ring item, int slot){
+		public void equip(Ring item, int slot) throws BagNullException {
 			if(item==null) return ;
+			if(bag == null) throw new BagNullException() ;
 			if(bag.contains(item)){
 				pullOut(item) ;
 				System.out.println(" and equips it !");
