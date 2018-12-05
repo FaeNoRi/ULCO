@@ -21,4 +21,8 @@
 <fullyQualifiedTypeName name="Lsg.armors.RingedKnightArmor"/>
 <fullyQualifiedTypeName name="Lsg.bags.Bags"/>
 <fullyQualifiedTypeName name="Lsg.bags.MediumBag"/>
+<fullyQualifiedTypeName name="Lsg.exceptions.StaminaEmptyException"/>
+<fullyQualifiedTypeName name="Lsg.exceptions.BagNullException"/>
+<fullyQualifiedTypeName name="Lsg.exceptions.ConsumeNullException"/>
+<fullyQualifiedTypeName name="Lsg.graphics.CSSFactory"/>
 </qualifiedTypeNameHistroy>
